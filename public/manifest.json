@@ -1,0 +1,32 @@
+{
+  "short_name": "PW-Icons",
+  "name": "PW-Icons App",
+  "description": "A simple PWA for storing and converting icons.",
+  "version": "1.0",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/icon-192.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "/icon-512.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    },
+    {
+      "src": "/icon-16.ico",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-32.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}
