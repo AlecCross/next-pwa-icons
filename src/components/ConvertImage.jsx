@@ -108,7 +108,7 @@ const ConvertImage = () => {
 
       <div className={styles.imageContainer}>
         {images.length > 0 && (
-          <img className={styles.image} src={images[activeTab].webp} alt={`Icon ${images[activeTab].size}`} />
+          <img className={`${styles.image} ${styles['check-transparency']}`}  src={images[activeTab].webp} alt={`Icon ${images[activeTab].size}`} />
         )}
       </div>
     </div>
