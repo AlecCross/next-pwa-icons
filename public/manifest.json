@@ -1,6 +1,6 @@
 {
-  "short_name": "PW-Icons",
-  "name": "PW-Icons App",
+  "short_name": "PWA-Icons",
+  "name": "PWA-Icons App",
   "description": "A simple PWA for storing and converting icons.",
   "version": "1.0",
   "start_url": "/",
