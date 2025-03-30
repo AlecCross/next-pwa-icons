@@ -5,11 +5,9 @@ export default function Document() {
     <Html lang="en">
       <Head>
         {/* Іконки */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="icon" type="image/x-icon" sizes="16x16" href="/icon-16.ico" />
-        <link rel="icon" type="image/x-icon" sizes="32x32" href="/icon-32.ico" />
-        
-        {/* Маніфест для PWA */}
+        <link rel="icon" href="/icon-16.ico" />
+        <link rel="icon" type="image/webp" sizes="32x32" href="/icon-32.webp" />
+        <link rel="icon" type="image/webp" sizes="16x16" href="/icon-16.webp" />
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <body>
