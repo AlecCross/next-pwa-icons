@@ -1,3 +1,5 @@
+// pages/open-file.js
+
 import { useEffect, useState } from "react";
 
 export default function OpenFilePage() {
