@@ -1,23 +1,45 @@
 // components/ConvertImage.js
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import styles from '../styles/container.module.css'
+import styles from '../styles/container.module.css';
 
-const ConvertImage = () => {
+const Resolutions = [512, 384, 192, 180, 32, 16]; // Розміри
+
+const ConvertImage = ({ files }) => {
   const [images, setImages] = useState([]);
-  const [resolutions] = useState([512, 384, 192, 180, 32, 16]); // Розміри
   const [activeTab, setActiveTab] = useState(0);
+  const fileInputRef = useRef(null);
 
-  const convertImage = async (event) => {
-    if (!event.target.files.length) return;
+  useEffect(() => {
+    if (files && files.length > 0) {
+      convertImages(files);
+    }
+  }, [files]);
 
-    const src = URL.createObjectURL(event.target.files[0]);
-    const image = new Image();
-    image.src = src;
+  const convertImages = async (fileList) => {
+    const newImages = [];
+    for (const file of fileList) {
+      if (!file.type.startsWith('image/')) {
+        console.error('Непідтримуваний тип файлу:', file.type);
+        continue;
+      }
 
-    image.onload = async () => {
-      const newImages = await Promise.all(resolutions.map(async (size) => {
+      const src = URL.createObjectURL(file);
+      const image = new Image();
+      image.src = src;
+
+      await new Promise((resolve) => {
+        image.onload = resolve;
+        image.onerror = resolve;
+      });
+
+      if (image.width === 0 || image.height === 0) {
+        console.error('Помилка завантаження зображення');
+        continue;
+      }
+
+      const resizedImages = await Promise.all(Resolutions.map(async (size) => {
         if (image.width < size) return null;
 
         const canvas = document.createElement('canvas');
@@ -26,73 +48,78 @@ const ConvertImage = () => {
         canvas.width = size;
         canvas.height = Math.round(size / ratio);
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        
+
         return {
           webp: canvas.toDataURL('image/webp', 0.8),
-          ico: size <= 32 ? await canvasToIco(canvas) : null,
-          size
+          size,
+          originalFile: file.name,
         };
       }));
-
-      setImages(newImages.filter(Boolean));
-    };
+      newImages.push(...resizedImages.filter(Boolean));
+      URL.revokeObjectURL(src);
+    }
+    setImages(newImages);
   };
 
-  const canvasToIco = (canvas) => {
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => {
-        const file = new File([blob], 'favicon.ico', { type: 'image/x-icon' });
-        const url = URL.createObjectURL(file);
-        resolve(url);
-      }, 'image/x-icon');
-    });
-  };
-
-  // Функція для збереження окремих файлів
   const saveImage = (format) => {
-    const { webp, ico, size } = images[activeTab];
-    const url = format === 'ico' ? ico : webp;
-    const ext = format === 'ico' ? 'ico' : 'webp';
+    if (images.length === 0) return;
+    const { webp, size } = images[activeTab];
+    const url = webp;
+    const ext = 'webp';
+    let downloadName = `icon-${size}.${ext}`;
+
+    if (size === 32 && format === 'webp') {
+      downloadName = `favicon.webp`;
+    }
 
     if (url) {
       const link = document.createElement('a');
       link.href = url;
-      link.download = `icon-${size}.${ext}`;
+      link.download = downloadName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
   };
 
-  // Функція для збереження всіх зображень у ZIP
   const saveAllAsZip = async () => {
     if (images.length === 0) return;
 
     const zip = new JSZip();
-    
-    images.forEach(({ webp, ico, size }) => {
-      if (webp) zip.file(`icon-${size}.webp`, webp.split(',')[1], { base64: true });
-      if (ico) zip.file(`icon-${size}.ico`, ico.split(',')[1], { base64: true });
+    let originalName = 'icons';
+
+    if (images[0]?.originalFile) {
+      originalName = images[0].originalFile.split('.').slice(0, -1).join('.');
+    }
+
+    images.forEach(({ webp, size }) => {
+      const baseName = `icon-${size}`;
+      if (webp) zip.file(`${baseName}.webp`, webp.split(',')[1], { base64: true });
+      if (size === 32 && webp) {
+        zip.file(`favicon.webp`, webp.split(',')[1], { base64: true });
+      }
     });
 
     const blob = await zip.generateAsync({ type: 'blob' });
-    saveAs(blob, 'icons.zip');
+    saveAs(blob, `${originalName}.zip`);
+  };
+
+  const handleFileInputChange = (event) => {
+    convertImages(Array.from(event.target.files));
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.upload}>
-        <span>Upload an image for PWA icons</span>
-        <input type="file" accept="image/*" onChange={convertImage} />
+      <div style={{ marginBottom: '20px' }}>
+        <input type="file" accept="image/*" onChange={handleFileInputChange} ref={fileInputRef} />
       </div>
       <div className={styles.saveButtons}>
-      {images.length > 0 && (
-    <>
-      <button className={styles.tab} onClick={saveAllAsZip}>Save All as ZIP</button>
-      <button className={styles.tab} onClick={() => saveImage('webp')}>Save as WebP</button>
-      {images[activeTab]?.ico && <button onClick={() => saveImage('ico')}>Save as ICO</button>}
-    </>
-  )}
+        {images.length > 0 && (
+          <>
+            <button className={styles.tab} onClick={saveAllAsZip}>Save All as ZIP</button>
+            <button className={styles.tab} onClick={() => saveImage('webp')}>Save as WebP</button>
+          </>
+        )}
       </div>
       <div className={styles.tabs}>
         {images.map((img, index) => (
@@ -108,7 +135,11 @@ const ConvertImage = () => {
 
       <div className={styles.imageContainer}>
         {images.length > 0 && (
-          <img className={`${styles.image} ${styles['check-transparency']}`}  src={images[activeTab].webp} alt={`Icon ${images[activeTab].size}`} />
+          <img
+            className={`${styles.image} ${styles['check-transparency']}`}
+            src={images[activeTab].webp}
+            alt={`Icon ${images[activeTab].size}`}
+          />
         )}
       </div>
     </div>
