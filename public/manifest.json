@@ -28,5 +28,14 @@
       "sizes": "32x32",
       "type": "image/x-icon"
     }
+  ],
+  "file_handlers": [
+    {
+      "action": "/open-file",
+      "accept": {
+        "image/webp": [".webp"],
+        "image/png": [".png"]
+      }
+    }
   ]
 }
