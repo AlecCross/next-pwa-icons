@@ -1,38 +1,52 @@
+/* Загальні стилі */
 .container {
-    margin-top: 20px;
-}
-
-.input {
-    display: none;
-}
-
-.imageContainer {
-    margin-top: 20px;
-}
-
-.image {
-    width: 80%;
-    height: auto;
-    margin-top: 10px;
-}
-
-/* tabbedImages.module.css */
-
-.tabbedImages {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.tabs {
     display: flex;
     justify-content: center;
+    align-items: flex-start; /* Вирівнюємо по верхньому краю */
+    flex-direction: column; /* За замовчуванням елементи йдуть стовпчиком */
+    padding: 20px; /* Додамо трохи відступів */
+}
+
+/* Контейнер для інструментів (завантаження, формат, кнопки) */
+.controlsContainer {
+    display: flex;
+    flex-direction: column; /* Інструменти один над одним */
+    width: 45%; /* Займає менше місця, ніж зображення */
+    margin-right: 20px; /* Відступ від зображення на ПК */
+}
+
+/* Блок завантаження файлу */
+.uploadContainer {
+    margin-bottom: 20px;
+}
+
+/* Вибір формату */
+.formatContainer {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+/* Кнопки збереження */
+.saveButtons {
+    display: flex;
+    justify-content: start;
+    align-items: flex-start;
+    gap: 10px; /* Відстань між кнопками */
+}
+
+/* Вкладки з розмірами */
+.tabs {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap; /* Перенесення вкладок на новий рядок при необхідності */
+    gap: 5px; /* Відстань між вкладками */
+    margin-top: 20px;
 }
 
 .tab {
     cursor: pointer;
-    padding: 10px 20px;
-    margin: 0 5px;
+    padding: 8px 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f0f0f0;
@@ -42,29 +56,68 @@
     background-color: #ccc;
 }
 
+/* Контейнер для зображення */
 .imageContainer {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    width: 50%; /* Зображення займає 50% ширини */
 }
 
+/* Зображення */
 .image {
-    margin: 10px;
+    width: 100%;
+    height: auto;
+    max-width: 500px; /* Обмеження максимальної ширини */
 }
 
-.image img {
-    max-width: 256px;
-    /* Фіксована ширина зображень */
+/* Для мобільних та планшетів */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .controlsContainer {
+        width: 90%; /* На мобільних займає більшу частину ширини */
+        margin-right: 0;
+    }
+
+    .saveButtons {
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .tabs {
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .imageContainer {
+        width: 90%;
+        margin-top: 20px;
+    }
 }
 
-.saveButtons{
-    display: flex;
-    justify-content: center;
-    margin: 20px;
+/* Для ПК */
+@media (min-width: 769px) {
+    .container {
+        flex-direction: row; /* Інструменти та зображення в ряд */
+        justify-content: space-between; /* Розміщуємо інструменти зліва, зображення справа */
+        align-items: flex-start;
+    }
+
+    .controlsContainer {
+        align-items: flex-start; /* Вирівнюємо вміст контейнера інструментів по лівому краю */
+    }
+
+    .tabs {
+        justify-content: flex-start; /* Вкладки зліва */
+    }
 }
 
+/* Візуальні ефекти для зображень */
 .check-transparency {
     background: repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 50% / 20px 20px;
-  }
-  
+}
