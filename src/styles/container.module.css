@@ -1,30 +1,46 @@
 /* Загальні стилі */
 .container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Вирівнюємо по верхньому краю */
-    flex-direction: column; /* За замовчуванням елементи йдуть стовпчиком */
-    padding: 20px; /* Додамо трохи відступів */
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 30px;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Контейнер для інструментів (завантаження, формат, кнопки) */
 .controlsContainer {
+    background-color: #f9f9f9;
+    padding: 20px 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     display: flex;
-    flex-direction: column; /* Інструменти один над одним */
-    width: 45%; /* Займає менше місця, ніж зображення */
-    margin-right: 20px; /* Відступ від зображення на ПК */
+    flex-direction: column;
+    gap: 20px;
 }
 
 /* Блок завантаження файлу */
 .uploadContainer {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 /* Вибір формату */
-.formatContainer {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
+.formatContainer select {
+    margin-left: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 16px;
+    font-weight: 500;
+    outline: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transition: border-color 0.2s ease;
+}
+
+.formatContainer select:focus {
+    border-color: #4CAF50;
 }
 
 /* Кнопки збереження */
@@ -33,27 +49,34 @@
     justify-content: start;
     align-items: flex-start;
     gap: 10px; /* Відстань між кнопками */
+    
+}
+
+.saveButtons button:hover {
+    background-color: #125ea6;
 }
 
 /* Вкладки з розмірами */
-.tabs {
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap; /* Перенесення вкладок на новий рядок при необхідності */
-    gap: 5px; /* Відстань між вкладками */
-    margin-top: 20px;
-}
-
 .tab {
     cursor: pointer;
     padding: 8px 15px;
-    border: 1px solid #ccc;
+    margin: 8px 7px;
+    border: none;
     border-radius: 5px;
-    background-color: #f0f0f0;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.tab:hover {
+    background-color: #45a049;
+    transform: scale(1.02);
 }
 
 .tab.active {
-    background-color: #ccc;
+    background-color: #2e7d32;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 /* Контейнер для зображення */
@@ -68,7 +91,8 @@
 .image {
     width: 100%;
     height: auto;
-    max-width: 500px; /* Обмеження максимальної ширини */
+    max-width: 500px;
+    border-radius: 10px;
 }
 
 /* Для мобільних та планшетів */
@@ -86,17 +110,17 @@
     .saveButtons {
         flex-direction: row;
         justify-content: center;
-        margin-top: 20px;
+        margin-top: 10px;
     }
 
     .tabs {
         justify-content: center;
-        margin-top: 20px;
+        margin-top: 10px;
     }
 
     .imageContainer {
         width: 90%;
-        margin-top: 20px;
+        margin-top: 10px;
     }
 }
 
@@ -119,5 +143,9 @@
 
 /* Візуальні ефекти для зображень */
 .check-transparency {
-    background: repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+    background: repeating-conic-gradient(#e0e0e0 0% 25%, #ffffff 0% 50%) 50% / 20px 20px;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+
